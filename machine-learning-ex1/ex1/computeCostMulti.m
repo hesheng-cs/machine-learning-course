@@ -12,10 +12,11 @@ J = 0;
 % ====================== YOUR CODE HERE ======================
 % Instructions: Compute the cost of a particular choice of theta
 %               You should set J to the cost.
-
-
-
-
+%disp(m);
+%disp(size(X,2));
+prediction = X * theta;
+J = 1/(2*m) * (prediction - y)' * (prediction - y);
+%disp(J);
 
 % =========================================================================
 
