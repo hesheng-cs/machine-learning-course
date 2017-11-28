@@ -61,27 +61,48 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+A1 = [ones(m, 1) X];
+Z2 = A1 * Theta1';
+A2 = sigmoid(Z2);
+A2 = [ones(m, 1) A2];
+Z3 = A2 * Theta2';
+A3 = sigmoid(Z3);
+Y = zeros(m, num_labels);
+for i = 1:m
+	Y(i, y(i)) = 1;
+end
+J=-1.0/m * sum(sum((Y .* log(A3) + (1-Y) .* log(1 - A3))));
+Theta1_new = Theta1(:, 2:end); % 25x400
+Theta2_new = Theta2(:, 2:end); % 10x25
+regular_term = lambda/(2*m) * (sum(sum(Theta1_new .^2)) + sum(sum(Theta2_new .^2)));
+J = J + regular_term;
 % -------------------------------------------------------------
+% compute gradient
+for i = 1:m
+	% step 1
+	a1 = A1(i, :); % 1x401
+	z2 = Z2(i, :); % 1x25
+	a2 = A2(i, :); % 1x26
+	z3 = Z3(i, :); % 1x10
+	a3 = A3(i, :); % 1x10
+	% step 2
+	delta_3 = a3 - Y(i, :); % 1x10
+	% step 3
+	delta_2 = delta_3 * Theta2_new  .* sigmoidGradient(z2); % 1x25
+	% step 4
+	Theta1_grad = Theta1_grad + delta_2' * a1;
+	Theta2_grad = Theta2_grad + delta_3' * a2;
+end
+% step 5
+Theta1_grad = 1/m * Theta1_grad;
+Theta2_grad = 1/m * Theta2_grad;
 
+% compute regular gradient
+Theta1_new = [zeros(size(Theta1,1), 1) Theta1_new];
+Theta2_new = [zeros(size(Theta2,1), 1) Theta2_new];
+
+Theta1_grad = Theta1_grad + lambda/m * Theta1_new;
+Theta2_grad = Theta2_grad + lambda/m * Theta2_new;
 % =========================================================================
 
 % Unroll gradients
