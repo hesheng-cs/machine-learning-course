@@ -29,12 +29,9 @@ X = [ones(m, 1) X];
 %       are in rows, then, you can use max(A, [], 2) to obtain the max 
 %       for each row.
 %       
-
-
-
-
-
-
+res = X * all_theta';
+% pick the class i that maximize h(theta(i),x)
+[v, p] = max(res, [], 2);
 
 % =========================================================================
 
