@@ -15,7 +15,8 @@ sim = 0;
 %               sigma
 %
 %
-
+power = - (x1 - x2)' * (x1 -x2)/(2*sigma*sigma);
+sim = e ^ power;
 
 
 
